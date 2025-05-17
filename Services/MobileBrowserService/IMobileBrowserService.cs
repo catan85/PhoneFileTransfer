@@ -1,8 +1,8 @@
 ﻿using PhoneFileTransfer.Models;
 
-namespace PhoneFileTransfer.Services.MtpBrowserService
+namespace PhoneFileTransfer.Services.MobileBrowserService
 {
-    public interface IMtpBrowserService
+    public interface IMobileBrowserService
     {
         WorkerStatus BrowseStatus { get; }
         IEnumerable<string> CurrentDirectories { get; }

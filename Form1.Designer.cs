@@ -39,6 +39,7 @@
             this.checkBoxMediaDevice = new CheckBox();
             this.progressBar1 = new ProgressBar();
             this.buttonCopyAndRemove = new Button();
+            this.checkBoxAdbDriver = new CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)this.dataGridView1).BeginInit();
             this.SuspendLayout();
@@ -61,6 +62,7 @@
             this.tableLayoutPanel1.Controls.Add(this.checkBoxMediaDevice, 4, 2);
             this.tableLayoutPanel1.Controls.Add(this.progressBar1, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.buttonCopyAndRemove, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.checkBoxAdbDriver, 4, 3);
             this.tableLayoutPanel1.Dock = DockStyle.Fill;
             this.tableLayoutPanel1.Location = new Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -155,9 +157,9 @@
             this.checkBoxMediaDevice.AutoSize = true;
             this.checkBoxMediaDevice.Location = new Point(667, 379);
             this.checkBoxMediaDevice.Name = "checkBoxMediaDevice";
-            this.checkBoxMediaDevice.Size = new Size(128, 19);
+            this.checkBoxMediaDevice.Size = new Size(97, 19);
             this.checkBoxMediaDevice.TabIndex = 7;
-            this.checkBoxMediaDevice.Text = "MediaDevice mode";
+            this.checkBoxMediaDevice.Text = "Mobile mode";
             this.checkBoxMediaDevice.UseVisualStyleBackColor = true;
             this.checkBoxMediaDevice.CheckedChanged += this.checkBoxMediaDevice_CheckedChanged;
             // 
@@ -180,6 +182,16 @@
             this.buttonCopyAndRemove.Text = "Copy and Remove";
             this.buttonCopyAndRemove.UseVisualStyleBackColor = true;
             this.buttonCopyAndRemove.Click += this.buttonCopyAndRemove_Click;
+            // 
+            // checkBoxAdbDriver
+            // 
+            this.checkBoxAdbDriver.AutoSize = true;
+            this.checkBoxAdbDriver.Location = new Point(667, 429);
+            this.checkBoxAdbDriver.Name = "checkBoxAdbDriver";
+            this.checkBoxAdbDriver.Size = new Size(81, 19);
+            this.checkBoxAdbDriver.TabIndex = 12;
+            this.checkBoxAdbDriver.Text = "Adb driver";
+            this.checkBoxAdbDriver.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -208,5 +220,6 @@
         private CheckBox checkBoxMediaDevice;
         private ProgressBar progressBar1;
         private Button buttonCopyAndRemove;
+        private CheckBox checkBoxAdbDriver;
     }
 }

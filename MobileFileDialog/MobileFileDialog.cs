@@ -1,5 +1,5 @@
 ﻿using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.MtpBrowserService;
+using PhoneFileTransfer.Services.MobileBrowserService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,43 +8,43 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
-namespace PhoneFileTransfer
+namespace PhoneFileTransfer.MobileFileDialog
 {
 
-    public partial class MtpFileDialog : Form
+    public partial class MobileFileDialog : Form
     {
         private List<string> selectedFilePaths;
         private List<string> previousPaths = new List<string>();
 
-        public IMtpBrowserService mtpBrowserService { get; }
+        private readonly IMobileBrowserService mobileBrowserService;
         public List<string> SelectedFilePaths { get => this.selectedFilePaths; }
         public string SelectedDevice { get; private set; }
         public string CurrentFolder { get; private set; }
         public bool RelativePaths { get; private set; }
 
-        public MtpFileDialog(IMtpBrowserService mtpBrowserService)
+        public MobileFileDialog(IMobileBrowserService mobileBrowserService)
         {
             InitializeComponent();
             this.selectedFilePaths = new List<string>();
-            this.mtpBrowserService = mtpBrowserService;
-            this.mtpBrowserService.DirectoriesUpdated += this.MtpBrowserService_DirectoriesUpdated;
-            this.mtpBrowserService.FilesUpdated += this.MtpBrowserService_FilesUpdated;
-            this.mtpBrowserService.BrowsingStatus += this.MtpBrowserService_BrowsingStatus;
-            this.mtpBrowserService.RecursiveDirectoriesBrowseCompleted += this.MtpBrowserService_RecursiveDirectoriesBrowseCompleted;
-            this.mtpBrowserService.RecursiveDirectoriesBrowseFoundFiles += this.MtpBrowserService_RecursiveDirectoriesBrowseFoundFiles;
+            this.mobileBrowserService = mobileBrowserService;
+            this.mobileBrowserService.DirectoriesUpdated += this.MobileBrowserService_DirectoriesUpdated;
+            this.mobileBrowserService.FilesUpdated += this.MobileBrowserService_FilesUpdated;
+            this.mobileBrowserService.BrowsingStatus += this.MobileBrowserService_BrowsingStatus;
+            this.mobileBrowserService.RecursiveDirectoriesBrowseCompleted += this.MobileBrowserService_RecursiveDirectoriesBrowseCompleted;
+            this.mobileBrowserService.RecursiveDirectoriesBrowseFoundFiles += this.MobileBrowserService_RecursiveDirectoriesBrowseFoundFiles;
         }
 
 
 
         private void btnSelectDevice_Click(object sender, EventArgs e)
         {
-            var names = mtpBrowserService.GetDevicesNames();
+            var names = mobileBrowserService.GetDevicesNames();
             SelectionDialog selectionDialog = new SelectionDialog("Seleziona il dispositivo", names);
             if (selectionDialog.ShowDialog() == DialogResult.OK)
             {
-                mtpBrowserService.SetCurrentDevice(selectionDialog.SelectedItem);
+                mobileBrowserService.SetCurrentDevice(selectionDialog.SelectedItem);
                 this.SelectedDevice = selectionDialog.SelectedItem;
-                mtpBrowserService.ExecuteBrowse();
+                mobileBrowserService.ExecuteBrowse();
             }
         }
 
@@ -53,15 +53,15 @@ namespace PhoneFileTransfer
             if (lstFolders.SelectedItem != null)
             {
                 CurrentFolder = (string)lstFolders.SelectedItem;
-                mtpBrowserService.SetCurrentFolder(CurrentFolder);
-                mtpBrowserService.ExecuteBrowse();
+                mobileBrowserService.SetCurrentFolder(CurrentFolder);
+                mobileBrowserService.ExecuteBrowse();
             }
         }
 
 
         private void buttonUpFolder_Click(object sender, EventArgs e)
         {
-            mtpBrowserService.GoUpFolder();
+            mobileBrowserService.GoUpFolder();
         }
 
 
@@ -82,7 +82,7 @@ namespace PhoneFileTransfer
         // aggiungere copia ricorsiva delle directory, dovrebbe eseguire in background ed al termine chiudere il dialog
 
 
-        private void MtpBrowserService_DirectoriesUpdated(object? sender, IEnumerable<string> currentFolders)
+        private void MobileBrowserService_DirectoriesUpdated(object? sender, IEnumerable<string> currentFolders)
         {
             UpdateFoldersUiData data = new UpdateFoldersUiData();
             data.FolderNames = currentFolders.ToList();
@@ -108,7 +108,7 @@ namespace PhoneFileTransfer
         }
 
 
-        private void MtpBrowserService_FilesUpdated(object? sender, IEnumerable<string> fileNames)
+        private void MobileBrowserService_FilesUpdated(object? sender, IEnumerable<string> fileNames)
         {
             UpdateFilesUiData data = new UpdateFilesUiData();
             data.FileNames = fileNames.ToList();
@@ -133,7 +133,7 @@ namespace PhoneFileTransfer
             }
         }
 
-        private void MtpBrowserService_BrowsingStatus(object? sender, WorkerStatus e)
+        private void MobileBrowserService_BrowsingStatus(object? sender, WorkerStatus e)
         {
             if (this.InvokeRequired)
             {
@@ -165,25 +165,25 @@ namespace PhoneFileTransfer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (mtpBrowserService.BrowseStatus == WorkerStatus.Idle)
+            if (mobileBrowserService.BrowseStatus == WorkerStatus.Idle)
             {
                 List<string> selectedDirs = new List<string>();
                 foreach (string selectedFolder in lstFolders.SelectedItems)
                 {
                     selectedDirs.Add(selectedFolder);
                 }
-                mtpBrowserService.ExecuteRecursiveDirectoryBrowse(selectedDirs);
+                mobileBrowserService.ExecuteRecursiveDirectoryBrowse(selectedDirs);
 
                 buttonCopyFolders.Text = "Cancel";
             }
             else
             {
-                mtpBrowserService.CancelRecursiveDirectoryBrowse();
+                mobileBrowserService.CancelRecursiveDirectoryBrowse();
             }
 
         }
 
-        private void MtpBrowserService_RecursiveDirectoriesBrowseFoundFiles(object? sender, int e)
+        private void MobileBrowserService_RecursiveDirectoriesBrowseFoundFiles(object? sender, int e)
         {
             if (this.InvokeRequired)
             {
@@ -200,7 +200,7 @@ namespace PhoneFileTransfer
             labelStatus.Text = $"Found files: {foundFiles}";
         }
 
-        private void MtpBrowserService_RecursiveDirectoriesBrowseCompleted(object? sender, IEnumerable<string> e)
+        private void MobileBrowserService_RecursiveDirectoriesBrowseCompleted(object? sender, IEnumerable<string> e)
         {
             if (this.InvokeRequired)
             {
@@ -239,6 +239,11 @@ namespace PhoneFileTransfer
         private void ResetCopyFolderButtonText()
         {
             buttonCopyFolders.Text = "Copia folder selezionate";
+        }
+
+        private void MobileFileDialog_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

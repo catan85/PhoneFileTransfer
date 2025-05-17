@@ -1,6 +1,6 @@
-﻿namespace PhoneFileTransfer
+﻿namespace PhoneFileTransfer.MobileFileDialog
 {
-    partial class MtpFileDialog
+    partial class MobileFileDialog
     {/// <summary>
      /// Variabile necessaria per il supporto del designer.
      /// </summary>
@@ -147,12 +147,13 @@
             this.labelStatus.TabIndex = 7;
             this.labelStatus.Text = "Status: ";
             // 
-            // MtpFileDialog
+            // MobileFileDialog
             // 
             this.ClientSize = new Size(806, 216);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "MtpFileDialog";
+            this.Name = "MobileFileDialog";
             this.Text = "Selezione File MTP";
+            this.Load += this.MobileFileDialog_Load;
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

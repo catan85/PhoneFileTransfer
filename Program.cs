@@ -1,12 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PhoneFileTransfer.MobileFileDialog;
 using PhoneFileTransfer.Models;
 using PhoneFileTransfer.Services.FileCopierService;
 using PhoneFileTransfer.Services.FIleCopyAndRemoveService;
 using PhoneFileTransfer.Services.FileRemoverService;
 using PhoneFileTransfer.Services.JobStoreService;
-using PhoneFileTransfer.Services.MediaDeviceWorker;
-using PhoneFileTransfer.Services.MtpBrowserService;
+using PhoneFileTransfer.Services.MobileBrowserService;
+using PhoneFileTransfer.Utilities.AdbServerStarter;
 using PhoneFileTransfer.Utilities.Copier;
 using PhoneFileTransfer.Utilities.Copier.CopierFileSystem;
 using PhoneFileTransfer.Utilities.Copier.CopierMtp;
@@ -26,20 +27,23 @@ namespace PhoneFileTransfer
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddSingleton<IMediaDeviceWorker,MediaDeviceWorker>();
 
                     services.AddSingleton<IFileCopier, FileCopier>();
                     services.AddSingleton<IFileRemover, FileRemover>();
                     services.AddSingleton<IFileCopyAndRemover, FileCopyAndRemover>();
                     services.AddSingleton<IPersistenceStore, PersistenceStore>();
-                    services.AddSingleton<IMtpBrowserService, MtpBrowserService>();
-                 
-                    services.AddSingleton<MtpFileDialog>();
+
+                    services.AddTransient<MtpBrowserService>();
+                    services.AddTransient<AdbBrowserService>();
+                    services.AddTransient<IMobileBrowserServiceFactory, MobileBrowserServiceFactory>();
+                    services.AddTransient<IMobileFileDialogFactory, MobileFileDialogFactory>();
+                    services.AddSingleton<MobileFileDialog.MobileFileDialog>();
                     services.AddSingleton<MainForm>();
                     services.AddTransient<ICopierFileSystemUtil, CopierFileSystemUtil>();
-                    services.AddTransient<ICopierMtpUtil, CopierMtpUtil>();
+                    services.AddTransient<ICopierMobileUtil, CopierMtpUtil>();
                     services.AddTransient<IRemoverFileSystemUtil, RemoverFileSystemUtil>();
-                    services.AddTransient<IRemoverMtpUtil, RemoverMtpUtil>();
+                    services.AddTransient<IRemoverAdbUtil, RemoverAdbUtil>();
+                    services.AddSingleton<IAdbServerStarter, AdbServerStarter>();
                 
                 })
                 .Build();

@@ -12,7 +12,7 @@ namespace PhoneFileTransfer.Services.FileRemoverService
     internal class FileRemover : IFileRemover
     {
         private readonly IPersistenceStore _persistenceStore;
-        private readonly IRemoverMtpUtil removerMtp;
+        private readonly IRemoverAdbUtil removerMtp;
         private readonly IRemoverFileSystemUtil removerFileSystem;
         private CancellationTokenSource _CancellationTokenSource;
         private ManualResetEventSlim _PauseEvent;
@@ -22,7 +22,7 @@ namespace PhoneFileTransfer.Services.FileRemoverService
 
         public WorkerStatus RemoveStatus { get; private set; }
 
-        public FileRemover(IPersistenceStore persistenceStore, IRemoverMtpUtil removerMtp, IRemoverFileSystemUtil removerFileSystem)
+        public FileRemover(IPersistenceStore persistenceStore, IRemoverAdbUtil removerMtp, IRemoverFileSystemUtil removerFileSystem)
         {
             RemoveStatus = WorkerStatus.Idle;
             _persistenceStore = persistenceStore;

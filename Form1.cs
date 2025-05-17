@@ -8,9 +8,13 @@ using PhoneFileTransfer.Services.FileCopierService;
 using PhoneFileTransfer.Services.FileRemoverService;
 using System.Net.NetworkInformation;
 using System.Diagnostics;
-using PhoneFileTransfer.Services.MtpBrowserService;
 using PhoneFileTransfer.Services.FileCopierService.Models;
 using PhoneFileTransfer.Services.FIleCopyAndRemoveService;
+using PhoneFileTransfer.Utilities.Remover.RemoverMtp;
+using MediaDevices;
+using System.IO;
+using PhoneFileTransfer.MobileFileDialog;
+
 
 
 namespace PhoneFileTransfer
@@ -24,9 +28,9 @@ namespace PhoneFileTransfer
         private readonly IFileCopyAndRemover fileCopyAndRemover;
 
         private readonly IPersistenceStore persistenceStore;
-        private readonly MtpFileDialog mtpFileDialog;
+        private readonly IMobileFileDialogFactory mobileFileDialogFactory;
 
-        public MainForm(IFileCopier fileCopier, IFileRemover fileRemover, IFileCopyAndRemover fileCopyAndRemover, IPersistenceStore persistenceStore, MtpFileDialog mtpFileDialog)
+        public MainForm(IFileCopier fileCopier, IFileRemover fileRemover, IFileCopyAndRemover fileCopyAndRemover, IPersistenceStore persistenceStore, IMobileFileDialogFactory mobileFileDialogFactory)
         {
             InitializeComponent();
             dataGridView1.AutoGenerateColumns = true;
@@ -34,12 +38,11 @@ namespace PhoneFileTransfer
             persistenceStore.Load();
             _jobList = new BindingList<Job>(persistenceStore.Get().JobList);
             dataGridView1.DataSource = _jobList;
-
+            this.mobileFileDialogFactory = mobileFileDialogFactory;
             this.fileCopier = fileCopier;
             this.fileRemover = fileRemover;
             this.fileCopyAndRemover = fileCopyAndRemover;
             this.persistenceStore = persistenceStore;
-            this.mtpFileDialog = mtpFileDialog;
             fileCopier.FileCopying += this.FileCopier_FileCopying;
             fileRemover.FileRemoving += this.FileRemover_FileRemoving;
         }
@@ -48,7 +51,7 @@ namespace PhoneFileTransfer
         {
             if (checkBoxMediaDevice.Checked)
             {
-                BrowseSourcesWithMtpDialog();
+                BrowseSourcesWithMobileDialog();
             }
             else
             {
@@ -56,22 +59,24 @@ namespace PhoneFileTransfer
             }
         }
 
-        private void BrowseSourcesWithMtpDialog()
+        private void BrowseSourcesWithMobileDialog()
         {
-            var dialogResult = mtpFileDialog.ShowDialog();
-            if (dialogResult == DialogResult.OK && mtpFileDialog.SelectedFilePaths.Count > 0)
+            var mobileFileDialog = mobileFileDialogFactory.Create(checkBoxAdbDriver.Checked);
+
+            var dialogResult = mobileFileDialog.ShowDialog();
+            if (dialogResult == DialogResult.OK && mobileFileDialog.SelectedFilePaths.Count > 0)
             {
                 var destinationFolder = ShowDestinationDialog();
-                var sourceFiles = mtpFileDialog.SelectedFilePaths;
-                if (mtpFileDialog.RelativePaths)
+                var sourceFiles = mobileFileDialog.SelectedFilePaths;
+                if (mobileFileDialog.RelativePaths)
                 {
-                    persistenceStore.Get().LastSourcePath = mtpFileDialog.CurrentFolder;
-                    AddJobs(true, mtpFileDialog.SelectedDevice, sourceFiles, destinationFolder, mtpFileDialog.CurrentFolder);
+                    persistenceStore.Get().LastSourcePath = mobileFileDialog.CurrentFolder;
+                    AddJobs(true, mobileFileDialog.SelectedDevice, sourceFiles, destinationFolder, mobileFileDialog.CurrentFolder);
                 }
                 else
                 {
                     persistenceStore.Get().LastSourcePath = Path.GetDirectoryName(sourceFiles.First());
-                    AddJobs(true, mtpFileDialog.SelectedDevice, mtpFileDialog.SelectedFilePaths, destinationFolder, null);
+                    AddJobs(true, mobileFileDialog.SelectedDevice, mobileFileDialog.SelectedFilePaths, destinationFolder, null);
                 }
             }
         }
@@ -358,6 +363,11 @@ namespace PhoneFileTransfer
                 }
                 fileCopyAndRemover.Execute(skipDone);
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

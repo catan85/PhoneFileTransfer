@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
-namespace PhoneFileTransfer.Services.MtpBrowserService
+namespace PhoneFileTransfer.Services.MobileBrowserService
 {
-    public class MtpBrowserService : IMtpBrowserService
+    public class MtpBrowserService : IMobileBrowserService
     {
         private MediaDevice _selectedDevice;
         

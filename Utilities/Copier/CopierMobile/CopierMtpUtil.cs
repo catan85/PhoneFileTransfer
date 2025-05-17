@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace PhoneFileTransfer.Utilities.Copier.CopierMtp
 {
-    public class CopierMtpUtil : ICopierMtpUtil
+    public class CopierMtpUtil : ICopierMobileUtil
     {
+
         public void Copy(string deviceDescription, string source, string destination)
         {
             var dir = Path.GetDirectoryName(destination);
@@ -22,5 +23,7 @@ namespace PhoneFileTransfer.Utilities.Copier.CopierMtp
             device.Connect(enableCache: false);
             device.DownloadFile(source, destination);
         }
+
+
     }
 }

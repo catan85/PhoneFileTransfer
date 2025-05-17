@@ -19,7 +19,7 @@ namespace PhoneFileTransfer.Services.FileCopierService
 
         private readonly IPersistenceStore _persistenceStore;
         private readonly ICopierFileSystemUtil copierFileSystem;
-        private readonly ICopierMtpUtil copierMtp;
+        private readonly ICopierMobileUtil copierMtp;
         private CancellationTokenSource _CancellationTokenSource;
         private ManualResetEventSlim _PauseEvent;
         private Task _Task;
@@ -31,7 +31,7 @@ namespace PhoneFileTransfer.Services.FileCopierService
         private int copiedFiles;
         private int filesToCopy;
 
-        public FileCopier(IPersistenceStore persistenceStore, ICopierFileSystemUtil copierFileSystem, ICopierMtpUtil copierMtp)
+        public FileCopier(IPersistenceStore persistenceStore, ICopierFileSystemUtil copierFileSystem, ICopierMobileUtil copierMtp)
         {
             CopyStatus = WorkerStatus.Idle;
             _persistenceStore = persistenceStore;
