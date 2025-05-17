@@ -8,7 +8,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
-namespace PhoneFileTransfer.MobileFileDialog
+namespace PhoneFileTransfer
 {
 
     public partial class MobileFileDialog : Form

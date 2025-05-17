@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhoneFileTransfer.Utilities.Copier.CopierMtp
+namespace PhoneFileTransfer.Utilities.Copier.CopierMobile
 {
     public class CopierMtpUtil : ICopierMobileUtil
     {

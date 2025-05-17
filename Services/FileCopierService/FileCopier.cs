@@ -4,7 +4,7 @@ using PhoneFileTransfer.Services.FileRemoverService;
 using PhoneFileTransfer.Services.JobStoreService;
 using PhoneFileTransfer.Utilities.Copier;
 using PhoneFileTransfer.Utilities.Copier.CopierFileSystem;
-using PhoneFileTransfer.Utilities.Copier.CopierMtp;
+using PhoneFileTransfer.Utilities.Copier.CopierMobile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace PhoneFileTransfer.Services.FileCopierService
 {
-    internal class FileCopier : IFileCopier
+    public class FileCopier : IFileCopier
     {
 
         private readonly IPersistenceStore _persistenceStore;
         private readonly ICopierFileSystemUtil copierFileSystem;
-        private readonly ICopierMobileUtil copierMtp;
+        private readonly ICopierMobileUtil copierMobile;
         private CancellationTokenSource _CancellationTokenSource;
         private ManualResetEventSlim _PauseEvent;
         private Task _Task;
@@ -31,12 +31,12 @@ namespace PhoneFileTransfer.Services.FileCopierService
         private int copiedFiles;
         private int filesToCopy;
 
-        public FileCopier(IPersistenceStore persistenceStore, ICopierFileSystemUtil copierFileSystem, ICopierMobileUtil copierMtp)
+        public FileCopier(IPersistenceStore persistenceStore, ICopierFileSystemUtil copierFileSystem, ICopierMobileUtil copierMobileUtil)
         {
             CopyStatus = WorkerStatus.Idle;
             _persistenceStore = persistenceStore;
             this.copierFileSystem = copierFileSystem;
-            this.copierMtp = copierMtp;
+            this.copierMobile = copierMobileUtil;
             _PauseEvent = new ManualResetEventSlim(true); // Inizialmente non in pausa
         }
 
@@ -106,7 +106,7 @@ namespace PhoneFileTransfer.Services.FileCopierService
 
 
                 if (job.IsMediaDevice)
-                    this.copierMtp.Copy(job.DeviceDescription, job.SourceFile, job.DestinationFile);
+                    this.copierMobile.Copy(job.DeviceDescription, job.SourceFile, job.DestinationFile);
                 else
                     this.copierFileSystem.Copy(job.SourceFile, job.DestinationFile);
  

@@ -1,4 +1,4 @@
-﻿using PhoneFileTransfer.Utilities.Copier.CopierMtp;
+﻿
 using SharpAdbClient;
 using System;
 using System.Collections.Generic;

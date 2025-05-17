@@ -192,6 +192,7 @@
             this.checkBoxAdbDriver.TabIndex = 12;
             this.checkBoxAdbDriver.Text = "Adb driver";
             this.checkBoxAdbDriver.UseVisualStyleBackColor = true;
+            this.checkBoxAdbDriver.CheckedChanged += this.checkBoxAdbDriver_CheckedChanged;
             // 
             // MainForm
             // 

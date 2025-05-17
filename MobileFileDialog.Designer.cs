@@ -1,4 +1,4 @@
-﻿namespace PhoneFileTransfer.MobileFileDialog
+﻿namespace PhoneFileTransfer
 {
     partial class MobileFileDialog
     {/// <summary>

@@ -1,4 +1,4 @@
-﻿namespace PhoneFileTransfer.Utilities.Copier.CopierMtp
+﻿namespace PhoneFileTransfer.Utilities.Copier.CopierMobile
 {
     public interface ICopierMobileUtil
     {

@@ -13,7 +13,7 @@ using PhoneFileTransfer.Services.FIleCopyAndRemoveService;
 using PhoneFileTransfer.Utilities.Remover.RemoverMtp;
 using MediaDevices;
 using System.IO;
-using PhoneFileTransfer.MobileFileDialog;
+using PhoneFileTransfer.Factories;
 
 
 
@@ -23,14 +23,14 @@ namespace PhoneFileTransfer
     {
 
         private BindingList<Job> _jobList;
-        private readonly IFileCopier fileCopier;
+        private IFileCopier fileCopier;
+        private IFileCopyAndRemover fileCopyAndRemover;
+
         private readonly IFileRemover fileRemover;
-        private readonly IFileCopyAndRemover fileCopyAndRemover;
-
         private readonly IPersistenceStore persistenceStore;
-        private readonly IMobileFileDialogFactory mobileFileDialogFactory;
+        private readonly IFactory factory;
 
-        public MainForm(IFileCopier fileCopier, IFileRemover fileRemover, IFileCopyAndRemover fileCopyAndRemover, IPersistenceStore persistenceStore, IMobileFileDialogFactory mobileFileDialogFactory)
+        public MainForm(IFileRemover fileRemover, IPersistenceStore persistenceStore, IFactory factory)
         {
             InitializeComponent();
             dataGridView1.AutoGenerateColumns = true;
@@ -38,13 +38,24 @@ namespace PhoneFileTransfer
             persistenceStore.Load();
             _jobList = new BindingList<Job>(persistenceStore.Get().JobList);
             dataGridView1.DataSource = _jobList;
-            this.mobileFileDialogFactory = mobileFileDialogFactory;
-            this.fileCopier = fileCopier;
+ 
             this.fileRemover = fileRemover;
-            this.fileCopyAndRemover = fileCopyAndRemover;
+          
             this.persistenceStore = persistenceStore;
-            fileCopier.FileCopying += this.FileCopier_FileCopying;
+            this.factory = factory;
             fileRemover.FileRemoving += this.FileRemover_FileRemoving;
+        }
+
+        private void UpdateAdbSetting()
+        {
+            if (this.fileCopier != null)
+            {
+                this.fileCopier.FileCopying -= this.FileCopier_FileCopying;
+            }
+
+            this.fileCopier = this.factory.CreateFileCopier(this.checkBoxAdbDriver.Checked);
+            fileCopier.FileCopying += this.FileCopier_FileCopying;
+            this.fileCopyAndRemover = this.factory.CreateFileCopyAndRemover(this.checkBoxAdbDriver.Checked);
         }
 
         private void buttonAddJobs_Click(object sender, EventArgs e)
@@ -61,7 +72,7 @@ namespace PhoneFileTransfer
 
         private void BrowseSourcesWithMobileDialog()
         {
-            var mobileFileDialog = mobileFileDialogFactory.Create(checkBoxAdbDriver.Checked);
+            var mobileFileDialog = this.factory.CreateMobileFileDialog(checkBoxAdbDriver.Checked);
 
             var dialogResult = mobileFileDialog.ShowDialog();
             if (dialogResult == DialogResult.OK && mobileFileDialog.SelectedFilePaths.Count > 0)
@@ -368,6 +379,11 @@ namespace PhoneFileTransfer
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkBoxAdbDriver_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateAdbSetting();
         }
     }
 
