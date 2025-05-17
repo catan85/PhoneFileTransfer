@@ -361,3 +361,17 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Tools/Adb/adb.exe
+/Tools/Adb/AdbWinApi.dll
+/Tools/Adb/AdbWinUsbApi.dll
+/Tools/Adb/etc1tool.exe
+/Tools/Adb/fastboot.exe
+/Tools/Adb/hprof-conv.exe
+/Tools/Adb/libwinpthread-1.dll
+/Tools/Adb/make_f2fs.exe
+/Tools/Adb/make_f2fs_casefold.exe
+/Tools/Adb/mke2fs.conf
+/Tools/Adb/mke2fs.exe
+/Tools/Adb/NOTICE.txt
+/Tools/Adb/source.properties
+/Tools/Adb/sqlite3.exe
