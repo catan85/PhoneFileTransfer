@@ -1,6 +1,6 @@
 ﻿namespace PhoneFileTransfer.Utilities.AdbServerStarter
 {
-    public interface IAdbServerStarter
+    public interface IAdbServerStarterUtil
     {
         bool IsAdbServerRunning();
         void StartAdbServer();

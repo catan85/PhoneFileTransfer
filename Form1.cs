@@ -2,15 +2,14 @@ using PhoneFileTransfer.Models;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Linq;
-using PhoneFileTransfer.Services.JobStoreService;
+using PhoneFileTransfer.Services.Persistence;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using PhoneFileTransfer.Services.FileCopierService;
-using PhoneFileTransfer.Services.FileRemoverService;
+using PhoneFileTransfer.Services.FileCopier;
+using PhoneFileTransfer.Services.FileRemover;
 using System.Net.NetworkInformation;
 using System.Diagnostics;
-using PhoneFileTransfer.Services.FileCopierService.Models;
-using PhoneFileTransfer.Services.FIleCopyAndRemoveService;
-using PhoneFileTransfer.Utilities.Remover.RemoverMtp;
+using PhoneFileTransfer.Services.FileCopier.Models;
+using PhoneFileTransfer.Services.FileCopyAndRemove;
 using MediaDevices;
 using System.IO;
 using PhoneFileTransfer.Factories;
@@ -23,14 +22,14 @@ namespace PhoneFileTransfer
     {
 
         private BindingList<Job> _jobList;
-        private IFileCopier fileCopier;
-        private IFileCopyAndRemover fileCopyAndRemover;
+        private IFileCopierService fileCopier;
+        private IFileCopyAndRemoverService fileCopyAndRemover;
+        private IFileRemoverService fileRemover;
 
-        private readonly IFileRemover fileRemover;
-        private readonly IPersistenceStore persistenceStore;
+        private readonly IPersistenceStoreService persistenceStore;
         private readonly IFactory factory;
 
-        public MainForm(IFileRemover fileRemover, IPersistenceStore persistenceStore, IFactory factory)
+        public MainForm(IPersistenceStoreService persistenceStore, IFactory factory)
         {
             InitializeComponent();
             dataGridView1.AutoGenerateColumns = true;
@@ -39,11 +38,11 @@ namespace PhoneFileTransfer
             _jobList = new BindingList<Job>(persistenceStore.Get().JobList);
             dataGridView1.DataSource = _jobList;
  
-            this.fileRemover = fileRemover;
-          
+  
+            
             this.persistenceStore = persistenceStore;
             this.factory = factory;
-            fileRemover.FileRemoving += this.FileRemover_FileRemoving;
+            
         }
 
         private void UpdateAdbSetting()
@@ -53,9 +52,14 @@ namespace PhoneFileTransfer
                 this.fileCopier.FileCopying -= this.FileCopier_FileCopying;
             }
 
-            this.fileCopier = this.factory.CreateFileCopier(this.checkBoxAdbDriver.Checked);
+            this.fileCopier = this.factory.CreateFileCopierService(this.checkBoxAdbDriver.Checked);
             fileCopier.FileCopying += this.FileCopier_FileCopying;
-            this.fileCopyAndRemover = this.factory.CreateFileCopyAndRemover(this.checkBoxAdbDriver.Checked);
+            
+            
+            this.fileRemover = this.factory.CreateFileRemoverService(this.checkBoxAdbDriver.Checked);
+            fileRemover.FileRemoving += this.FileRemover_FileRemoving;
+
+            this.fileCopyAndRemover = this.factory.CreateFileCopyAndRemover(fileCopier,fileRemover);
         }
 
         private void buttonAddJobs_Click(object sender, EventArgs e)

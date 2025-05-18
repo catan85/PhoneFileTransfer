@@ -2,17 +2,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PhoneFileTransfer.Factories;
 using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.FileCopierService;
-using PhoneFileTransfer.Services.FIleCopyAndRemoveService;
-using PhoneFileTransfer.Services.FileRemoverService;
-using PhoneFileTransfer.Services.JobStoreService;
-using PhoneFileTransfer.Services.MobileBrowserService;
+using PhoneFileTransfer.Services.FileCopier;
+using PhoneFileTransfer.Services.FileCopyAndRemove;
+using PhoneFileTransfer.Services.FileRemover;
+using PhoneFileTransfer.Services.Persistence;
+using PhoneFileTransfer.Services.MobileBrowser;
 using PhoneFileTransfer.Utilities.AdbServerStarter;
 using PhoneFileTransfer.Utilities.Copier;
 using PhoneFileTransfer.Utilities.Copier.CopierFileSystem;
 using PhoneFileTransfer.Utilities.Copier.CopierMobile;
 using PhoneFileTransfer.Utilities.Remover.RemoverFileSystem;
-using PhoneFileTransfer.Utilities.Remover.RemoverMtp;
+using PhoneFileTransfer.Utilities.Remover.RemoverMobile;
+
 
 namespace PhoneFileTransfer
 {
@@ -27,10 +28,7 @@ namespace PhoneFileTransfer
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
-
-                    services.AddSingleton<IFileRemover, FileRemover>();
-                  
-                    services.AddSingleton<IPersistenceStore, PersistenceStore>();
+                    services.AddSingleton<IPersistenceStoreService, PersistenceStoreService>();
 
                     services.AddTransient<MtpBrowserService>();
                     services.AddTransient<AdbBrowserService>();
@@ -43,9 +41,11 @@ namespace PhoneFileTransfer
                     services.AddTransient<CopierAdbUtil>();
                     
                     services.AddTransient<IRemoverFileSystemUtil, RemoverFileSystemUtil>();
-                    services.AddTransient<IRemoverAdbUtil, RemoverAdbUtil>();
-                    services.AddSingleton<IAdbServerStarter, AdbServerStarter>();
-                
+                    services.AddTransient<RemoverMtpUtil>();
+                    services.AddTransient<RemoverAdbUtil>();
+
+                    services.AddSingleton<IAdbServerStarterUtil, AdbServerStarterUtil>();
+                    
                 })
                 .Build();
 

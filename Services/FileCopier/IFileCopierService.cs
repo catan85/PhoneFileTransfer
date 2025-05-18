@@ -1,9 +1,9 @@
 ﻿using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.FileCopierService.Models;
+using PhoneFileTransfer.Services.FileCopier.Models;
 
-namespace PhoneFileTransfer.Services.FileCopierService
+namespace PhoneFileTransfer.Services.FileCopier
 {
-    public interface IFileCopier
+    public interface IFileCopierService
     {
         public void ExecuteCopy(bool skipJobsDone);
         public void PauseCopy();

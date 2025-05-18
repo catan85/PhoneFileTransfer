@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
-namespace PhoneFileTransfer.Services.MobileBrowserService
+namespace PhoneFileTransfer.Services.MobileBrowser
 {
     public class MtpBrowserService : IMobileBrowserService
     {

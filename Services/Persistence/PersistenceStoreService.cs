@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace PhoneFileTransfer.Services.JobStoreService
+namespace PhoneFileTransfer.Services.Persistence
 {
-    internal class PersistenceStore : IPersistenceStore
+    internal class PersistenceStoreService : IPersistenceStoreService
     {
         private readonly string _persistenceFileName = "persistence.json";
-        private Persistence persistence = new Persistence();
+        private Models.Persistence persistence = new Models.Persistence();
 
-        public PersistenceStore() { }
+        public PersistenceStoreService() { }
 
         public void Save()
         {
@@ -28,15 +28,15 @@ namespace PhoneFileTransfer.Services.JobStoreService
             if (File.Exists(_persistenceFileName))
             {
                 var data = File.ReadAllText(_persistenceFileName);
-                persistence = JsonConvert.DeserializeObject<Persistence>(data);
+                this.persistence = JsonConvert.DeserializeObject<Models.Persistence>(data);
             }
             else
             {
-                persistence = new Persistence()
+                this.persistence = new Models.Persistence()
                 { JobList = new List<Job>(), LastDestinationPath = "", LastSourcePath = "" };
             }
         }
 
-        public Persistence Get() { return persistence; }
+        public Models.Persistence Get() { return persistence; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.MobileBrowserService;
+using PhoneFileTransfer.Services.MobileBrowser;
 using PhoneFileTransfer.Utilities.AdbServerStarter;
 using SharpAdbClient;
 using System;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhoneFileTransfer.Services.MobileBrowserService
+namespace PhoneFileTransfer.Services.MobileBrowser
 {
     public class AdbBrowserService : IMobileBrowserService
     {
@@ -35,7 +35,7 @@ namespace PhoneFileTransfer.Services.MobileBrowserService
 
         private string _currentDirectory;
 
-        public AdbBrowserService(IAdbServerStarter adbStarter)
+        public AdbBrowserService(IAdbServerStarterUtil adbStarter)
         {
             _adbClient = new AdbClient();
             if (!adbStarter.IsAdbServerRunning())

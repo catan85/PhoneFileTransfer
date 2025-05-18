@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhoneFileTransfer.Utilities.Remover.RemoverMtp
+namespace PhoneFileTransfer.Utilities.Remover.RemoverMobile
 {
-    internal class RemoverMtpUtil : IRemoverAdbUtil
+    internal class RemoverMtpUtil : IRemoverMobileUtil
     {
         public void Remove(string deviceDescription, string path)
         {
@@ -18,7 +18,7 @@ namespace PhoneFileTransfer.Utilities.Remover.RemoverMtp
                 device.Connect(MediaDeviceAccess.GenericWrite, MediaDeviceShare.Write, enableCache: false);
                 device.DeleteFile(path);
 
-                System.Threading.Thread.Sleep(20);
+                Thread.Sleep(20);
             }
             catch (Exception ex)
             {

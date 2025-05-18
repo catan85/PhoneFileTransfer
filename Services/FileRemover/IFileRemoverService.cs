@@ -1,8 +1,8 @@
 ﻿using PhoneFileTransfer.Models;
 
-namespace PhoneFileTransfer.Services.FileRemoverService
+namespace PhoneFileTransfer.Services.FileRemover
 {
-    public interface IFileRemover
+    public interface IFileRemoverService
     {
         public void ExecuteRemove(bool skipAlreadyRemoved);
         public event EventHandler<string> FileRemoving;

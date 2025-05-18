@@ -1,6 +1,6 @@
 ﻿namespace PhoneFileTransfer.Utilities.Remover.RemoverFileSystem
 {
-    internal interface IRemoverFileSystemUtil
+    public interface IRemoverFileSystemUtil
     {
         void Remove(string path);
     }

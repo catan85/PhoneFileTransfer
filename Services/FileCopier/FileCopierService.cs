@@ -1,7 +1,7 @@
 ﻿using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.FileCopierService.Models;
-using PhoneFileTransfer.Services.FileRemoverService;
-using PhoneFileTransfer.Services.JobStoreService;
+using PhoneFileTransfer.Services.FileCopier.Models;
+using PhoneFileTransfer.Services.FileRemover;
+using PhoneFileTransfer.Services.Persistence;
 using PhoneFileTransfer.Utilities.Copier;
 using PhoneFileTransfer.Utilities.Copier.CopierFileSystem;
 using PhoneFileTransfer.Utilities.Copier.CopierMobile;
@@ -12,12 +12,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhoneFileTransfer.Services.FileCopierService
+namespace PhoneFileTransfer.Services.FileCopier
 {
-    public class FileCopier : IFileCopier
+    public class FileCopierService : IFileCopierService
     {
 
-        private readonly IPersistenceStore _persistenceStore;
+        private readonly IPersistenceStoreService _persistenceStore;
         private readonly ICopierFileSystemUtil copierFileSystem;
         private readonly ICopierMobileUtil copierMobile;
         private CancellationTokenSource _CancellationTokenSource;
@@ -31,7 +31,7 @@ namespace PhoneFileTransfer.Services.FileCopierService
         private int copiedFiles;
         private int filesToCopy;
 
-        public FileCopier(IPersistenceStore persistenceStore, ICopierFileSystemUtil copierFileSystem, ICopierMobileUtil copierMobileUtil)
+        public FileCopierService(IPersistenceStoreService persistenceStore, ICopierFileSystemUtil copierFileSystem, ICopierMobileUtil copierMobileUtil)
         {
             CopyStatus = WorkerStatus.Idle;
             _persistenceStore = persistenceStore;

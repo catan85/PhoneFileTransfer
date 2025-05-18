@@ -1,5 +1,5 @@
 ﻿using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.MobileBrowserService;
+using PhoneFileTransfer.Services.MobileBrowser;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

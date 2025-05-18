@@ -5,7 +5,7 @@ namespace PhoneFileTransfer.Utilities.AdbServerStarter
     using System.Diagnostics;
     using System.Net.Sockets;
 
-    class AdbServerStarter : IAdbServerStarter
+    class AdbServerStarterUtil : IAdbServerStarterUtil
     {
         private const string AdbPath = @"Tools\Adb\adb.exe"; // Cambia con il percorso corretto di adb.exe
         private const int AdbPort = 5037;

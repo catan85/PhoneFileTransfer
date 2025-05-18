@@ -1,6 +1,6 @@
 ﻿using PhoneFileTransfer.Models;
 
-namespace PhoneFileTransfer.Services.MobileBrowserService
+namespace PhoneFileTransfer.Services.MobileBrowser
 {
     public interface IMobileBrowserService
     {

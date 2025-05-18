@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhoneFileTransfer.Services.FileCopierService.Models
+namespace PhoneFileTransfer.Services.FileCopier.Models
 {
     public class CopierStatusEventArgs
     {

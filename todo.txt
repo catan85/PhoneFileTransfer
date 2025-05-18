@@ -1,3 +1,2 @@
-﻿- rimozione via adb/mtp configurabile (ora è fisso mtp, aggiungere al factory ecc.)
-- correggere errore in copia folder via adb
+﻿- correggere errore in copia folder via adb
 - 

@@ -1,18 +1,18 @@
 ﻿using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.JobStoreService;
+using PhoneFileTransfer.Services.Persistence;
 using PhoneFileTransfer.Utilities.Remover.RemoverFileSystem;
-using PhoneFileTransfer.Utilities.Remover.RemoverMtp;
+using PhoneFileTransfer.Utilities.Remover.RemoverMobile;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhoneFileTransfer.Services.FileRemoverService
+namespace PhoneFileTransfer.Services.FileRemover
 {
-    internal class FileRemover : IFileRemover
+    internal class FileRemoverService : IFileRemoverService
     {
-        private readonly IPersistenceStore _persistenceStore;
-        private readonly IRemoverAdbUtil removerMtp;
+        private readonly IPersistenceStoreService _persistenceStore;
+        private readonly IRemoverMobileUtil removerMobile;
         private readonly IRemoverFileSystemUtil removerFileSystem;
         private CancellationTokenSource _CancellationTokenSource;
         private ManualResetEventSlim _PauseEvent;
@@ -22,11 +22,11 @@ namespace PhoneFileTransfer.Services.FileRemoverService
 
         public WorkerStatus RemoveStatus { get; private set; }
 
-        public FileRemover(IPersistenceStore persistenceStore, IRemoverAdbUtil removerMtp, IRemoverFileSystemUtil removerFileSystem)
+        public FileRemoverService(IPersistenceStoreService persistenceStore, IRemoverMobileUtil removerMobile, IRemoverFileSystemUtil removerFileSystem)
         {
             RemoveStatus = WorkerStatus.Idle;
             _persistenceStore = persistenceStore;
-            this.removerMtp = removerMtp;
+            this.removerMobile = removerMobile;
             this.removerFileSystem = removerFileSystem;
             _PauseEvent = new ManualResetEventSlim(true); // Inizialmente non in pausa
         }
@@ -98,7 +98,7 @@ namespace PhoneFileTransfer.Services.FileRemoverService
                 FileRemoving?.Invoke(this, job.SourceFile);
 
                 if (job.IsMediaDevice)
-                    this.removerMtp.Remove(job.DeviceDescription, job.SourceFile);
+                    this.removerMobile.Remove(job.DeviceDescription, job.SourceFile);
                 else
                     this.removerFileSystem.Remove(job.SourceFile);
 

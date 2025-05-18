@@ -1,22 +1,22 @@
 ﻿using PhoneFileTransfer.Models;
-using PhoneFileTransfer.Services.FileCopierService;
-using PhoneFileTransfer.Services.FileRemoverService;
+using PhoneFileTransfer.Services.FileCopier;
+using PhoneFileTransfer.Services.FileRemover;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhoneFileTransfer.Services.FIleCopyAndRemoveService
+namespace PhoneFileTransfer.Services.FileCopyAndRemove
 {
-    public class FileCopyAndRemover : IFileCopyAndRemover
+    public class FileCopyAndRemoverService : IFileCopyAndRemoverService
     {
-        private readonly IFileCopier fileCopier;
-        private readonly IFileRemover fileRemover;
+        private readonly IFileCopierService fileCopier;
+        private readonly IFileRemoverService fileRemover;
         private int operation = 0;
         private bool _skipAlreadyDone = false;
 
-        public FileCopyAndRemover(IFileCopier fileCopier, IFileRemover fileRemover)
+        public FileCopyAndRemoverService(IFileCopierService fileCopier, IFileRemoverService fileRemover)
         {
             this.fileCopier = fileCopier;
             this.fileRemover = fileRemover;
