@@ -126,7 +126,7 @@ namespace PhoneFileTransfer.Services.MobileBrowser
             _currentFiles.Clear();
 
             // Forza output un elemento per riga
-            string cmd = $"ls -p -1 \"{path}\"";
+            string cmd = $"export LC_ALL=C.UTF-8 && ls -p -1 \"{path}\"";
             var output = await RunShellCommandAsync(cmd);
 
             var directories = new List<string>();
@@ -143,6 +143,8 @@ namespace PhoneFileTransfer.Services.MobileBrowser
                 bool isDirectory = line.EndsWith("/");
                 var name = isDirectory ? line.TrimEnd('/') : line;
 
+                name = UnescapeAdbPath(name); // <-- qui unescape del nome
+
                 var fullPath = Path.Combine(path, name).Replace('\\', '/');
 
                 if (isDirectory)
@@ -155,6 +157,12 @@ namespace PhoneFileTransfer.Services.MobileBrowser
             _currentFiles.AddRange(files);
 
             return (directories, files);
+        }
+
+        private string UnescapeAdbPath(string path)
+        {
+            // Molto basilare. Personalizzalo se i dispositivi usano encoding più complessi
+            return path.Replace("\\ ", " "); // gestisce solo spazi per ora
         }
 
         private async Task<string> RunShellCommandAsync(string command)
@@ -236,4 +244,5 @@ namespace PhoneFileTransfer.Services.MobileBrowser
             return fullPath;
         }
     }
+
 }

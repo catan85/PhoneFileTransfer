@@ -34,7 +34,19 @@ namespace PhoneFileTransfer
             this.mobileBrowserService.RecursiveDirectoriesBrowseFoundFiles += this.MobileBrowserService_RecursiveDirectoriesBrowseFoundFiles;
         }
 
+        public void Init(string deviceName, string initialFolder)
+        {
+            if (!string.IsNullOrEmpty(deviceName) && !string.IsNullOrEmpty(initialFolder))
+            {
+                this.SelectedDevice = deviceName;
+                this.CurrentFolder = initialFolder;
 
+                mobileBrowserService.SetCurrentDevice(deviceName);
+                mobileBrowserService.SetCurrentFolder(initialFolder);
+                mobileBrowserService.ExecuteBrowse();
+            }
+
+        }
 
         private void btnSelectDevice_Click(object sender, EventArgs e)
         {

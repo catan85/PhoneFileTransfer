@@ -11,5 +11,9 @@ namespace PhoneFileTransfer.Models
         public List<Job> JobList { get; set; }
         public string LastSourcePath { get; set; }
         public string LastDestinationPath { get; set; }
+        public bool MobileMode { get; set; }
+        public bool AdbMode { get; set; }
+        public string DeviceName { get; set; }
+
     }
 }

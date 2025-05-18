@@ -46,6 +46,10 @@ namespace PhoneFileTransfer
             this.factory = factory;
 
 
+            checkBoxMediaDevice.Checked = persistenceStore.Get().MobileMode;
+            checkBoxAdbDriver.Checked = persistenceStore.Get().AdbMode;
+
+
             UpdateAdbSetting();
         }
 
@@ -82,6 +86,8 @@ namespace PhoneFileTransfer
         {
             var mobileFileDialog = this.factory.CreateMobileFileDialog(checkBoxAdbDriver.Checked);
 
+            mobileFileDialog.Init(persistenceStore.Get().DeviceName, persistenceStore.Get().LastSourcePath);
+
             var dialogResult = mobileFileDialog.ShowDialog();
             if (dialogResult == DialogResult.OK && mobileFileDialog.SelectedFilePaths.Count > 0)
             {
@@ -97,7 +103,9 @@ namespace PhoneFileTransfer
                     persistenceStore.Get().LastSourcePath = Path.GetDirectoryName(sourceFiles.First());
                     AddJobs(true, mobileFileDialog.SelectedDevice, mobileFileDialog.SelectedFilePaths, destinationFolder, null);
                 }
+                persistenceStore.Get().DeviceName = mobileFileDialog.SelectedDevice;
             }
+            persistenceStore.Save();
         }
 
         private void BrowseSourcesFromFileSystem()
@@ -358,6 +366,9 @@ namespace PhoneFileTransfer
 
         private void checkBoxMediaDevice_CheckedChanged(object sender, EventArgs e)
         {
+            persistenceStore.Get().MobileMode = checkBoxMediaDevice.Checked;
+            persistenceStore.Save();
+
             if (this._jobList != null && this._jobList.Count > 0)
             {
                 var mb = MessageBox.Show("Are you sure? Job list will be cleaned", "", MessageBoxButtons.YesNo);
@@ -394,6 +405,8 @@ namespace PhoneFileTransfer
         private void checkBoxAdbDriver_CheckedChanged(object sender, EventArgs e)
         {
             UpdateAdbSetting();
+            persistenceStore.Get().AdbMode = checkBoxAdbDriver.Checked;
+            persistenceStore.Save();
         }
     }
 
