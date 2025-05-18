@@ -1,1 +1,6 @@
-﻿- salvataggio dei path da mobile si è rotto
+﻿- salvataggio in memoria persistente dei path da mobile non funziona
+- andando dentro e fuori di folder, e copiando in modalità folder relativa, in adb, a volte determina un path sbagliato (doppia folder Camera nel path sorgente)
+  da capire se lo fa anche con altri metodi
+- togliere il reset della lista su cambio modalità
+- salvare adb/mobilemode
+- 
