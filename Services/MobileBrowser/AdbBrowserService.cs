@@ -146,7 +146,7 @@ namespace PhoneFileTransfer.Services.MobileBrowser
                 var fullPath = Path.Combine(path, name).Replace('\\', '/');
 
                 if (isDirectory)
-                    directories.Add(fullPath);
+                    directories.Add(fullPath + "/");
                 else
                     files.Add(fullPath);
             }

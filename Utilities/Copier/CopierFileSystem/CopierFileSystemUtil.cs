@@ -11,7 +11,7 @@ namespace PhoneFileTransfer.Utilities.Copier.CopierFileSystem
     {
         public void Copy(string source, string destination)
         {
-            var dir = Path.GetDirectoryName(destination);
+            var dir = System.IO.Path.GetDirectoryName(destination);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);

@@ -13,6 +13,7 @@ using PhoneFileTransfer.Services.FileCopyAndRemove;
 using MediaDevices;
 using System.IO;
 using PhoneFileTransfer.Factories;
+using PhoneFileTransfer.Utilities.Path;
 
 
 
@@ -26,10 +27,11 @@ namespace PhoneFileTransfer
         private IFileCopyAndRemoverService fileCopyAndRemover;
         private IFileRemoverService fileRemover;
 
+        private readonly IPathUtils pathUtils;
         private readonly IPersistenceStoreService persistenceStore;
         private readonly IFactory factory;
 
-        public MainForm(IPersistenceStoreService persistenceStore, IFactory factory)
+        public MainForm(IPersistenceStoreService persistenceStore, IPathUtils pathUtils, IFactory factory)
         {
             InitializeComponent();
             dataGridView1.AutoGenerateColumns = true;
@@ -39,10 +41,12 @@ namespace PhoneFileTransfer
             dataGridView1.DataSource = _jobList;
  
   
-            
+            this.pathUtils = pathUtils;
             this.persistenceStore = persistenceStore;
             this.factory = factory;
-            
+
+
+            UpdateAdbSetting();
         }
 
         private void UpdateAdbSetting()
@@ -135,16 +139,18 @@ namespace PhoneFileTransfer
                     int id = GenerateId();
                     if (sourceFolder == null)
                     {
-                        AddJob(id, isMediaDevice, deviceDescription, file, Path.Combine(destinationFolder, Path.GetFileName(file)));
+                        AddJob(id, isMediaDevice, deviceDescription, file, pathUtils.CombineSafe(destinationFolder, Path.GetFileName(file)));
                     }
                     else
                     {
-                        AddJob(id, isMediaDevice, deviceDescription, sourceFolder + file, destinationFolder + file);
+                        AddJob(id, isMediaDevice, deviceDescription, pathUtils.CombineSafe(sourceFolder,file), pathUtils.CombineSafe(destinationFolder, file));
                     }
 
                 }
             }
         }
+
+
 
         private string ShowDestinationDialog()
         {

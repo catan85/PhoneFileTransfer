@@ -12,7 +12,7 @@ namespace PhoneFileTransfer.Utilities.Copier.CopierMobile
 
         public void Copy(string deviceDescription, string source, string destination)
         {
-            var dir = Path.GetDirectoryName(destination);
+            var dir = System.IO.Path.GetDirectoryName(destination);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);

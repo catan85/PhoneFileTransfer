@@ -1,2 +1,1 @@
-﻿- correggere errore in copia folder via adb
-- 
+﻿- salvataggio dei path da mobile si è rotto

@@ -13,6 +13,7 @@ using PhoneFileTransfer.Utilities.Copier.CopierFileSystem;
 using PhoneFileTransfer.Utilities.Copier.CopierMobile;
 using PhoneFileTransfer.Utilities.Remover.RemoverFileSystem;
 using PhoneFileTransfer.Utilities.Remover.RemoverMobile;
+using PhoneFileTransfer.Utilities.Path;
 
 
 namespace PhoneFileTransfer
@@ -45,6 +46,8 @@ namespace PhoneFileTransfer
                     services.AddTransient<RemoverAdbUtil>();
 
                     services.AddSingleton<IAdbServerStarterUtil, AdbServerStarterUtil>();
+
+                    services.AddTransient<IPathUtils, PathUtils>();
                     
                 })
                 .Build();
