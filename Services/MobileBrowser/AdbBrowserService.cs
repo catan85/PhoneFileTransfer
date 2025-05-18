@@ -4,6 +4,7 @@ using PhoneFileTransfer.Utilities.AdbServerStarter;
 using SharpAdbClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -126,7 +127,10 @@ namespace PhoneFileTransfer.Services.MobileBrowser
             _currentFiles.Clear();
 
             // Forza output un elemento per riga
-            string cmd = $"export LC_ALL=C.UTF-8 && ls -p -1 \"{path}\"";
+            //string cmd = $"ls -p -1 \"{path}\"";
+            string cmd = $"ls -p -1 \"{path}\"";
+
+
             var output = await RunShellCommandAsync(cmd);
 
             var directories = new List<string>();
@@ -164,15 +168,43 @@ namespace PhoneFileTransfer.Services.MobileBrowser
             // Molto basilare. Personalizzalo se i dispositivi usano encoding più complessi
             return path.Replace("\\ ", " "); // gestisce solo spazi per ora
         }
-
         private async Task<string> RunShellCommandAsync(string command)
         {
-            var receiver = new ConsoleOutputReceiver();
-            await Task.Run(() =>
+            // Escape virgolette nel comando (es. nei path)
+            string escapedCommand = command.Replace("\"", "\\\"");
+
+            // Metti tutto il comando shell tra virgolette doppie per adb shell
+            string adbArguments = $"shell \"{escapedCommand}\"";
+
+            return await Task.Run(() =>
             {
-                _adbClient.ExecuteRemoteCommand(command, _selectedDevice, receiver);
+                var processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "./tools/adb/adb.exe", // o "adb" se in PATH
+                    Arguments = adbArguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    StandardOutputEncoding = Encoding.UTF8,
+                    StandardErrorEncoding = Encoding.UTF8,
+                };
+
+                using (var process = new Process { StartInfo = processStartInfo })
+                {
+                    process.Start();
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
+                        throw new Exception($"ADB shell command failed: {error}");
+
+                    return output;
+                }
             });
-            return receiver.ToString();
         }
 
         private async Task BrowseRecursivelyDirectoriesInBackground(CancellationToken token, List<string> directories)
