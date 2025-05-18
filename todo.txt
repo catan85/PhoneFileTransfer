@@ -1,4 +1,3 @@
 ﻿- in adb le folder delle foto appaiono strane
 - andando dentro e fuori di folder, e copiando in modalità folder relativa, in adb, a volte determina un path sbagliato (doppia folder Camera nel path sorgente)
   da capire se lo fa anche con altri metodi
-- togliere il reset della lista su cambio modalità

@@ -368,16 +368,6 @@ namespace PhoneFileTransfer
         {
             persistenceStore.Get().MobileMode = checkBoxMediaDevice.Checked;
             persistenceStore.Save();
-
-            if (this._jobList != null && this._jobList.Count > 0)
-            {
-                var mb = MessageBox.Show("Are you sure? Job list will be cleaned", "", MessageBoxButtons.YesNo);
-
-                if (mb == DialogResult.Yes)
-                {
-                    this._jobList.Clear();
-                }
-            }
         }
 
         private void buttonCopyAndRemove_Click(object sender, EventArgs e)
